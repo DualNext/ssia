@@ -86,8 +86,8 @@ if uploaded_file is not None:
         X = np.array(np.transpose(dados_tratados)) 
 
         # 1º Classificador: bin1 (Alto-Médio vs Baixo)
-        pred_bin1 = model1.predict(X)[0]
-        prob_bin1 = model1.predict_proba(X)[0]
+        pred_bin1 = model1.predict(Xreshape(1, -1))[0]
+        prob_bin1 = model1.predict_proba(Xreshape(1, -1))[0]
         
         if pred_bin1 == 'Baixo':
             st.success(f'A amostra foi classificada como: **Baixo**')
@@ -124,6 +124,7 @@ else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de Brucelose Bovina</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
     st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR para análise</h3>''', unsafe_allow_html=True)
+
 
 
 
