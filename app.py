@@ -105,8 +105,8 @@ if uploaded_file is not None:
             st.info(f'A amostra foi classificada como: **Alto-Médio**')
         
             # 2º Classificador: bin2 (Alto vs Médio)
-            pred_bin2 = model2.predict(X)[0]
-            prob_bin2 = model2.predict_proba(X)[0]
+            pred_bin2 = model2.predict(X.reshape(1, -1))[0]
+            prob_bin2 = model2.predict_proba(X.reshape(1, -1))[0]
         
             prob_alto = prob_bin2[model2.classes_ == 'Alto'][0] * 100
             prob_medio = prob_bin2[model2.classes_ == 'Médio'][0] * 100
@@ -124,6 +124,7 @@ else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de Brucelose Bovina</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
     st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR para análise</h3>''', unsafe_allow_html=True)
+
 
 
 
