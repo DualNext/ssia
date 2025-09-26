@@ -57,7 +57,7 @@ if uploaded_file is not None:
             plt.xticks(np.arange(900, 1800 + 100, 100), fontsize=18, fontname='Cambria')
             plt.gca().tick_params(axis='x', pad=20)  # Ajusta o espaço entre os rótulos e a linha
             plt.xlim(1800, 900)
-            plt.ylim(dados_coletados.min().min() - 0.5, 100.5)
+            # plt.ylim(dados_coletados.min().min() - 0.5, 100.5)
             plt.yticks(fontsize=18, fontname='Cambria')
             plt.gca().tick_params(axis='y', pad=20)  # Ajusta o espaço entre os rótulos e a linha
             st.pyplot(fig)
@@ -79,7 +79,7 @@ if uploaded_file is not None:
             model2 = pickle.load(f)
 
         # Pré-tratamento (SNV)
-        dados_intervalo = dados.loc[1500:900] ## SELECIONAR INTERVALO para SNV
+        dados_intervalo = X.loc[4000:400] ## SELECIONAR INTERVALO para SNV
         dados_tratados = (dados_int - dados_int.mean(axis=0)) / dados_int.std(axis=0)
 
         # Matriz Transposta (n_amostras, n_variáveis)
@@ -124,5 +124,6 @@ else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de Brucelose Bovina</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
     st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR para análise</h3>''', unsafe_allow_html=True)
+
 
 
