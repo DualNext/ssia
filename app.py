@@ -91,8 +91,8 @@ if uploaded_file is not None:
         
         if pred_bin1 == 'Baixo':
             st.success(f'A amostra foi classificada como: **Baixo**')
-            prob_baixo = prob_bin1[model_bin1.classes_ == 'Baixo'][0] * 100
-            prob_altomedio = prob_bin1[model_bin1.classes_ == 'Alto-Médio'][0] * 100
+            prob_baixo = prob_bin1[model1.classes_ == 'Baixo'][0] * 100
+            prob_altomedio = prob_bin1[model1.classes_ == 'Alto-Médio'][0] * 100
         
             # Gráfico de pizza
             fig, ax = plt.subplots(figsize=(3, 3))
@@ -108,8 +108,8 @@ if uploaded_file is not None:
             pred_bin2 = model2.predict(X)[0]
             prob_bin2 = model2.predict_proba(X)[0]
         
-            prob_alto = prob_bin2[model_bin2.classes_ == 'Alto'][0] * 100
-            prob_medio = prob_bin2[model_bin2.classes_ == 'Médio'][0] * 100
+            prob_alto = prob_bin2[model2.classes_ == 'Alto'][0] * 100
+            prob_medio = prob_bin2[model2.classes_ == 'Médio'][0] * 100
         
             st.success(f'Detalhamento: **{pred_bin2}**')
         
@@ -124,6 +124,7 @@ else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de Brucelose Bovina</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
     st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR para análise</h3>''', unsafe_allow_html=True)
+
 
 
 
