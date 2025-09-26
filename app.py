@@ -54,7 +54,7 @@ if uploaded_file is not None:
             plt.title('Espectro FTIR', pad=10, fontsize=30, fontname='Cambria')
             plt.xlabel('Número de Onda ($\mathregular{cm^-¹}$)', labelpad=17, fontsize=26, fontname='Cambria')
             plt.ylabel('Transmitância (%)', labelpad=15, fontsize=28, fontname='Cambria')
-            plt.xticks(np.arange(400, 4000, 400), fontsize=18, fontname='Cambria')
+            plt.xticks(np.arange(400, 4000 + 400, 400), fontsize=18, fontname='Cambria')
             plt.gca().tick_params(axis='x', pad=20)  # Ajusta o espaço entre os rótulos e a linha
             plt.xlim(4000, 400)
             # plt.ylim(dados_coletados.min().min() - 0.5, 100.5)
@@ -132,6 +132,7 @@ else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de Sementes de Soja</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
     st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR no intervalo de 4000 a 400 cm<sup>-1</sup></h3>''', unsafe_allow_html=True)
+
 
 
 
