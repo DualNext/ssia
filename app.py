@@ -131,7 +131,8 @@ if uploaded_file is not None:
 else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de Sementes de Soja</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
-    st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR no intervalo de 4000~400 cm<sup>-1</sup></h3>''', unsafe_allow_html=True)
+    st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR no intervalo de 4000 a 400 cm<sup>-1</sup></h3>''', unsafe_allow_html=True)
+
 
 
 
