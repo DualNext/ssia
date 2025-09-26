@@ -118,7 +118,8 @@ if uploaded_file is not None:
             else:
                 detalhamento = "Médio Vigor"
         
-            st.success(f'Resultado: **{detalhamento}**')
+            st.success(f'A amostra foi classificada como: **{detalhamento}**')
+
         
             # Gráfico de pizza
             fig, ax = plt.subplots(figsize=(3, 3))
@@ -132,6 +133,7 @@ else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de vigor para Sementes de Soja</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
     st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR no intervalo de 4000 a 400 cm<sup>-1</sup></h3>''', unsafe_allow_html=True)
+
 
 
 
