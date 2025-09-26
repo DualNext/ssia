@@ -15,7 +15,7 @@ logo = 'logo.png'  # Substitua pelo caminho correto para o seu logo
 sidebar.image(logo, use_container_width=True)
 
 # Widget de upload de arquivo na barra lateral
-uploaded_file = sidebar.file_uploader('Use um arquivo CSV (separado por vírgula)', type="csv")
+uploaded_file = sidebar.file_uploader('Use um arquivo DPT', type="csv")
 
 # Inicializar a variável de estado para exibir o botão e a mensagem
 if "show_button" not in st.session_state:
@@ -24,23 +24,11 @@ if "show_button" not in st.session_state:
 # Verifica se um arquivo foi carregado
 if uploaded_file is not None:
     # Ler o conteúdo do arquivo em um DataFrame
-    dataframe = pd.read_csv(uploaded_file, header=0, index_col=0, delimiter=',',
-                            names=['Número de Onda', 'Transmitância'])
-
-    # Interpolação de dados oriundos de Agilent
-    def interp(df, new_index):
-        df_out = pd.DataFrame(index=new_index)
-        df_out.index.name = df.index.name
-        for colname, col in df.items():
-            df_out[colname] = np.interp(new_index, df.index, col)
-        return df_out
-
-    new_index = np.arange(round(dataframe.index[0]), round(dataframe.index[-1]) + 0.5, 0.5)
-    dados = interp(dataframe, new_index)
-    dados.sort_index(ascending=False, inplace=True)
+    dataframe = pd.read_csv(uploaded_file, sep = '\t', header = None, index_col = 0,
+                            skiprows = 0, decimal = '.', names = ['Número de Onda', 'Transmitância'])
 
     # Filtrar a faixa de 1800 a 900
-    dados_coletados = dados.loc[1800:900]
+    dados_coletados = dataframe.loc[4000:400]
 
     # Exibir as primeiras cinco linhas do DataFrame na barra lateral
     sidebar.write('Arquivo Carregado!')
@@ -84,46 +72,56 @@ if uploaded_file is not None:
     if not st.session_state.show_button:
         
         # Carregar os modelos treinados
-        with open('pca.pkl', 'rb') as f:
-            pca = pickle.load(f)
+        with open('bin1.pkl', 'rb') as f:
+            model1 = pickle.load(f)
             
-        with open('model.pkl', 'rb') as f:
-            model = pickle.load(f)
+        with open('bin2.pkl', 'rb') as f:
+            model2 = pickle.load(f)
 
-        # Pré-tratamento (Savitzky-Golay + Normalização)
-        dados_intervalo = dados.loc[1500:900]
+        # Pré-tratamento (SNV)
+        dados_intervalo = dados.loc[1500:900] ## SELECIONAR INTERVALO para SNV
+        dados_tratados = (dados_int - dados_int.mean(axis=0)) / dados_int.std(axis=0)
+
+        # Matriz Transposta (n_amostras, n_variáveis)
+        X = np.array(np.transpose(dados_tratados)) 
+
+        # 1º Classificador: bin1 (Alto-Médio vs Baixo)
+        pred_bin1 = model_bin1.predict(X)[0]
+        prob_bin1 = model_bin1.predict_proba(X)[0]
         
-        dados_filtrados = pd.DataFrame(savgol_filter(dados_intervalo, 27, 1, axis = 0))
-        dados_filtrados.index = dados_intervalo.index
-
-        dados_centrados = dados_filtrados - dados_filtrados.mean()
-        dados_tratados = dados_centrados / dados_centrados.std()
-
-        # Aplicar PCA
-        X = np.transpose(dados_tratados)
-        X_pca = pca.transform(X)
-
-        # Fazer previsões com SVM
-        prob = model.predict_proba(X_pca)[0]
+        if pred_bin1 == 'Baixo':
+            st.success(f'A amostra foi classificada como: **Baixo**')
+            prob_baixo = prob_bin1[model_bin1.classes_ == 'Baixo'][0] * 100
+            prob_altomedio = prob_bin1[model_bin1.classes_ == 'Alto-Médio'][0] * 100
         
-        # Definir as classes e probabilidades
-        classes = ['Brucelose', 'Controle']
-        probabilidade_bru = prob[0] * 100  # Probabilidade de Brucelose
-        probabilidade_controle = prob[1] * 100       # Probabilidade de Controle
-
-        # Definir cores dinamicamente
-        if probabilidade_bru > probabilidade_controle:
-            cores = ['red', 'gray']  # Vermelho para Brucelose, Cinza para Controle
+            # Gráfico de pizza
+            fig, ax = plt.subplots(figsize=(3, 3))
+            ax.pie([prob_baixo, prob_altomedio], labels=['Baixo', 'Alto-Médio'],
+                   autopct='%1.2f%%', startangle=90, colors=['green', 'gray'])
+            ax.set_title('Probabilidades - Nível 1', fontsize=10)
+            st.pyplot(fig)
+        
         else:
-            cores = ['gray', 'green']  # Cinza para Brucelose, Verde para Controle
-    
-        # Exibir gráfico de pizza com as probabilidades
-        fig, ax = plt.subplots(figsize=(3, 3))
-        ax.pie([probabilidade_bru, probabilidade_controle], labels=classes, autopct='%1.2f%%', startangle=90, colors=cores)
-        ax.set_title('Probabilidades de Diagnóstico', fontsize=10)
-        st.pyplot(fig)
+            st.info(f'A amostra foi classificada como: **Alto-Médio**')
+        
+            # 2º Classificador: bin2 (Alto vs Médio)
+            pred_bin2 = model_bin2.predict(X)[0]
+            prob_bin2 = model_bin2.predict_proba(X)[0]
+        
+            prob_alto = prob_bin2[model_bin2.classes_ == 'Alto'][0] * 100
+            prob_medio = prob_bin2[model_bin2.classes_ == 'Médio'][0] * 100
+        
+            st.success(f'Detalhamento: **{pred_bin2}**')
+        
+            # Gráfico de pizza
+            fig, ax = plt.subplots(figsize=(3, 3))
+            ax.pie([prob_alto, prob_medio], labels=['Alto', 'Médio'],
+                   autopct='%1.2f%%', startangle=90, colors=['red', 'orange'])
+            ax.set_title('Probabilidades - Nível 2', fontsize=10)
+            st.pyplot(fig)
 
 else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de Brucelose Bovina</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
     st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR para análise</h3>''', unsafe_allow_html=True)
+
