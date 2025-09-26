@@ -124,7 +124,7 @@ if uploaded_file is not None:
             fig, ax = plt.subplots(figsize=(3, 3))
             ax.pie([prob_alto, prob_medio],
                    labels=['Alto', 'Médio'],
-                   autopct='%1.2f%%', startangle=90, colors=['red', 'orange'])
+                   autopct='%1.2f%%', startangle=90, colors=['green', 'orange'])
             ax.set_title('Probabilidades - Nível 2', fontsize=10)
             st.pyplot(fig)
 
@@ -132,6 +132,7 @@ else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de Brucelose Bovina</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
     st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR para análise</h3>''', unsafe_allow_html=True)
+
 
 
 
