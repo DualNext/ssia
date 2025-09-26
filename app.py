@@ -85,39 +85,38 @@ if uploaded_file is not None:
         # Matriz Transposta (n_amostras, n_variáveis)
         X = np.array(np.transpose(dados_tratados)) 
 
-        # 1º Classificador: bin1 (0 = Baixo, 1 = Alto-Médio)
+        # 1º Classificador: bin1 (0 = Alto-Médio, 1 = Baixo)
         pred_bin1 = model1.predict(X.reshape(1, -1))[0]
         prob_bin1 = model1.predict_proba(X.reshape(1, -1))[0]
         
         # Extrair probabilidades associadas às classes
-        prob_baixo = prob_bin1[model1.classes_ == 0][0] * 100
-        prob_altomedio = prob_bin1[model1.classes_ == 1][0] * 100
-        
-        if pred_bin1 == 0:
+        prob_altomedio = prob_bin1[model1.classes_ == 0][0] * 100
+        prob_baixo = prob_bin1[model1.classes_ == 1][0] * 100
+                
+        if pred_bin1 == 1:
             st.success(f'A amostra foi classificada como: **Baixo**')
         
             # Gráfico de pizza
             fig, ax = plt.subplots(figsize=(3, 3))
-            ax.pie([prob_baixo, prob_altomedio],
-                   labels=['Baixo', 'Alto-Médio'],
+            ax.pie([prob_altomedio, prob_baixo],
+                   labels=['Alto-Médio', 'Baixo'],
                    autopct='%1.2f%%', startangle=90, colors=['green', 'gray'])
             ax.set_title('Probabilidades - Nível 1', fontsize=10)
             st.pyplot(fig)
         
         else:
-            st.info(f'A amostra foi classificada como: **Alto-Médio**')
-        
-            # 2º Classificador: bin2 (0 = Médio, 1 = Alto)
+            
+            # 2º Classificador: bin2 (0 = Alto, 1 = Médio)
             pred_bin2 = model2.predict(X.reshape(1, -1))[0]
             prob_bin2 = model2.predict_proba(X.reshape(1, -1))[0]
         
-            prob_medio = prob_bin2[model2.classes_ == 0][0] * 100
-            prob_alto = prob_bin2[model2.classes_ == 1][0] * 100
-        
+            prob_alto = prob_bin2[model2.classes_ == 0][0] * 100
+            prob_medio = prob_bin2[model2.classes_ == 1][0] * 100
+                    
             if pred_bin2 == 0:
-                detalhamento = "Médio"
-            else:
                 detalhamento = "Alto"
+            else:
+                detalhamento = "Médio"
         
             st.success(f'Detalhamento: **{detalhamento}**')
         
@@ -133,6 +132,7 @@ else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de Brucelose Bovina</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
     st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR para análise</h3>''', unsafe_allow_html=True)
+
 
 
 
