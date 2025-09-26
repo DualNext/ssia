@@ -79,7 +79,7 @@ if uploaded_file is not None:
             model2 = pickle.load(f)
 
         # Pré-tratamento (SNV)
-        dados_intervalo = dados_coletados.loc[4000:400] ## SELECIONAR INTERVALO para SNV
+        dados_int = dados_coletados.loc[4000:400] ## SELECIONAR INTERVALO para SNV
         dados_tratados = (dados_int - dados_int.mean(axis=0)) / dados_int.std(axis=0)
 
         # Matriz Transposta (n_amostras, n_variáveis)
@@ -124,6 +124,7 @@ else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de Brucelose Bovina</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
     st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR para análise</h3>''', unsafe_allow_html=True)
+
 
 
 
