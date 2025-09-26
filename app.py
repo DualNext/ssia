@@ -94,7 +94,7 @@ if uploaded_file is not None:
         prob_baixo = prob_bin1[model1.classes_ == 1][0] * 100
                 
         if pred_bin1 == 1:
-            st.success(f'A amostra foi classificada como: **Baixo**')
+            st.success(f'A amostra foi classificada como: **Baixo Vigor**')
         
             # Gráfico de pizza
             fig, ax = plt.subplots(figsize=(3, 3))
@@ -131,7 +131,8 @@ if uploaded_file is not None:
 else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de Sementes de Soja</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
-    st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR para análise</h3>''', unsafe_allow_html=True)
+    st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR no intervalo de 4000~400 $\mathregular{cm^-¹}$</h3>''', unsafe_allow_html=True)
+
 
 
 
