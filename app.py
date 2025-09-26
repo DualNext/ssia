@@ -15,7 +15,7 @@ logo = 'logo.png'  # Substitua pelo caminho correto para o seu logo
 sidebar.image(logo, use_container_width=True)
 
 # Widget de upload de arquivo na barra lateral
-uploaded_file = sidebar.file_uploader('Use um arquivo DPT', type="csv")
+uploaded_file = sidebar.file_uploader('Use um arquivo DPT', type="dpt")
 
 # Inicializar a variável de estado para exibir o botão e a mensagem
 if "show_button" not in st.session_state:
@@ -124,4 +124,5 @@ else:
     st.markdown('''<h1 style="color: orange; font-size: 35px;">Diagnóstico de Brucelose Bovina</h1>''', unsafe_allow_html=True)
     # Subtítulo (h3)
     st.markdown('''<h3 style="color: white; font-size: 20px;">Carregue um espectro FTIR para análise</h3>''', unsafe_allow_html=True)
+
 
